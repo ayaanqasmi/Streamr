@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .login-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    input {
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input type="email" id="email" name="email" placeholder="Email" required />
+      <input type="password" id="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        console.log('Sending login request...');
+        const response = await fetch('http://localhost:3000/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include', // Ensures cookies are sent and received
+        });
+
+        console.log('Response status:', response.status);
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Login successful:', data);
+          messageDiv.textContent = data.message || 'Login successful!';
+          messageDiv.style.color = 'green';
+        } else {
+          console.log('Login failed:', data);
+          messageDiv.textContent = data.message || 'Login failed!';
+          messageDiv.style.color = 'red';
+        }
+      } catch (error) {
+        console.error('Error logging in:', error);
+        messageDiv.textContent = 'An error occurred. Please try again.';
+        messageDiv.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>
