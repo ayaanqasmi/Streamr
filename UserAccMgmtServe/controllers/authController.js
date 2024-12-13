@@ -26,12 +26,7 @@ const login = asyncHandler(async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "120m" }
     );
-    res.cookie("token", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7200 * 1000, // in milliseconds
-    });
+
     res.status(200).json({ token: accessToken });
   } else {
     res.status(400).json * { msg: "invalid credentials" };
@@ -59,8 +54,6 @@ const validateToken = asyncHandler(async (req, res) => {
   try {
     // Verify the token
     const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-
-    console.log("Decoded token:", decoded);
 
     res.status(200).json(decoded);
   } catch (err) {

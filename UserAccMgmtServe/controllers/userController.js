@@ -1,24 +1,24 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
-
+import { validateToken } from "./authController.js";
 const getUsers = asyncHandler(async (req, res) => {
-    const users = await User.find().select("-password");
-    if (!users || users.length === 0) {
-        res.status(404).json({ msg: "No users found" });
-        throw new Error("No users found");
-    }
-    res.status(200).json(users);
-})
+  const users = await User.find().select("-password");
+  if (!users || users.length === 0) {
+    res.status(404).json({ msg: "No users found" });
+    throw new Error("No users found");
+  }
+  res.status(200).json(users);
+});
 
-const getUser=asyncHandler(async(req,res)=>{
-    const user=await User.findById(req.params.id);
-    if (!user) {
-        res.status(404).json({ msg: "No user found" });
-        throw new Error("No user found");
-    }
-    res.status(200).json(user);
-})
+const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    res.status(404).json({ msg: "No user found" });
+    throw new Error("No user found");
+  }
+  res.status(200).json(user);
+});
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -48,21 +48,10 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  let authResponse = await fetch(
-    "http://localhost:3000/api/auth/validateToken",
-    {
-      method: "POST",
-      headers: req.headers,
-    }
-  );
-  if (!authResponse.ok) {
-    res.status(401).json({ msg: "unauthorized" });
-    throw new Error("unauthorized");
-  }
- authResponse=await authResponse.json();
 
-  
-  if (authResponse.user.id !== req.params.id) {
+  let auth=req.user;
+
+  if (auth.user.id !== req.params.id) {
     res.status(401).json({ msg: "unauthorized" });
     throw new Error("unauthorized");
   }
@@ -87,4 +76,5 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 
-export {getUsers,getUser,registerUser,updateUser}
+
+export { getUsers, getUser, registerUser, updateUser };
