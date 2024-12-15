@@ -1,0 +1,22 @@
+{
+  "name": "usagemntrserv",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4",
+    "dotenv": "^16.4.7",
+    "express-async-handler": "^1.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "nodemon": "^3.1.7"
+  }
+}
