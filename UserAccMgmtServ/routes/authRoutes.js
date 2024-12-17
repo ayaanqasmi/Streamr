@@ -1,5 +1,5 @@
 import express from "express";
-import { login, validateToken } from "../controllers/authController.js"; // Adjust path as necessary
+import { login } from "../controllers/authController.js"; // Adjust path as necessary
 
 const router = express.Router();
 
@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/login", login);
 
 // Route for validating a token (for protected routes)
-router.post("/validateToken", validateToken);
+router.post("/validateToken");
 
 export default router;

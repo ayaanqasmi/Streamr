@@ -21,7 +21,7 @@ const validateTokenHandler = asyncHandler(async (req, res, next) => {
   try {
     // Verify the token
     const decoded = jwt.verify(userToken, process.env.ACCESS_TOKEN_SECRET);
-    req.user = decoded;
+    req.user = decoded.user;
     next();
   } catch (err) {
     console.error("JWT verification failed:", err);
