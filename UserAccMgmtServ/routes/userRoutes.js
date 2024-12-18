@@ -9,7 +9,7 @@ import {
   updateAllAccountStatuses,
 } from "../controllers/userController.js"; // Adjust path as necessary
 import validateTokenHandler from "../middleware/validateTokenHandler.js";
-import validateApiKey from "../middleware/validateAPIKey.js";
+import validateApiKey from "../middleware/validateApiKey.js";
 
 const router = express.Router();
 
