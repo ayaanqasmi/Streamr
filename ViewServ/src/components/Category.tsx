@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Category } from '@/types/Category';
+import Link from 'next/link';
 
 const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory }) => {
 
@@ -36,8 +37,13 @@ const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory })
                         <SwiperSlide key={idx}>
                             <button
                                 className={el.name === selectedCategory ? 'active' : ''}
-                                onClick={() => setSelectedCategory(el.name)}
+                                // onClick={() => setSelectedCategory(el.name)}
+                                onClick={() => window.location.href = el.url}
                             >{el.name}</button>
+                            {/* <Link href={el.url} className={el.name === selectedCategory ? 'active' : ''}
+                            >
+                            {el.name}
+                            </Link> */}
                         </SwiperSlide>
                     ))}
                 </Swiper>

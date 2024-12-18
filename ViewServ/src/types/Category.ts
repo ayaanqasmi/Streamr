@@ -1,5 +1,6 @@
 export type CategoryButton = {
     name: string;
+    url: string;
 }
 
 export type Category = {

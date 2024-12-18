@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 
 const Home: React.FC = () => {
 
-  const [selectedCategory, setSelectedCategory] = useState('New');
+  const [selectedCategory, setSelectedCategory] = useState('Home');
   const [video, setVideo] = useState([]);
 
   useEffect(() => {

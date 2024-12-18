@@ -1,7 +1,9 @@
 import { CategoryButton } from "../types/Category";
 
 export const categories: CategoryButton[] = [
-    { name: 'Upload Video' },
-    { name: 'Account' },
+    { name: 'Home', url: '/' },
+    { name: 'Upload', url: '/upload' },
+    { name: 'Account', url: '/account' },
+    { name: 'Log in', url: '/login' },
 ];
 
