@@ -10,7 +10,7 @@ const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory })
 
     return (
         <section id='category'>
-            <div className="container">
+            <div className="my-container">
                 <Swiper
                     slidesPerView={12}
                     pagination={{

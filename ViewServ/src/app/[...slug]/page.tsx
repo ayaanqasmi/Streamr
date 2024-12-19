@@ -32,7 +32,7 @@ const page: React.FC = () => {
         <>
             <section id="slug">
                 {videoDetail && (
-                    <div className="container">
+                    <div className="my-container">
                         <div className="row">
                             <div className="left">
                                 <ReactPlayer

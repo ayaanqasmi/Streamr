@@ -8,7 +8,7 @@ const Header: React.FC = () => {
 
     return (
         <header id='header'>
-            <div className="container">
+            <div className="my-container">
                 <div className="row">
                     <Link href='/'>
                         <div className="left" style={{fontSize: "3rem",color:"white"}}>

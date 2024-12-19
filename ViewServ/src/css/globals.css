@@ -34,15 +34,15 @@ body ::-webkit-scrollbar-thumb {
   top: 0;
   background: #000;
 }
-#header .container {
+#header .my-container {
   padding: 0 50px;
 }
-#header .container .row {
+#header .my-container .row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-#header .container .row .left img {
+#header .my-container .row .left img {
   display: block;
   -o-object-fit: cover;
      object-fit: cover;
@@ -100,7 +100,7 @@ body ::-webkit-scrollbar-thumb {
   background: #000;
   padding-bottom: 20px;
 }
-#category .container .swiper button {
+#category .my-container .swiper button {
   white-space: nowrap;
   color: #fff;
   font-size: 15px;
@@ -111,11 +111,11 @@ body ::-webkit-scrollbar-thumb {
   cursor: pointer;
   background: #373737;
 }
-#category .container .swiper button.active {
+#category .my-container .swiper button.active {
   background: #fff;
   color: #000;
 }
-#category .container .swiper button:hover {
+#category .my-container .swiper button:hover {
   background: #fff;
   color: #000;
 }
@@ -123,40 +123,41 @@ body ::-webkit-scrollbar-thumb {
 #video {
   margin-top: 80px;
 }
-#video .container {
+#video .my-container {
   padding: 20px 45px;
 }
-#video .container .row {
+#video .my-container .row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px 15px;
+  
 }
 
 .video-detail {
   margin-top: 0 !important;
   margin-top: -18px !important;
 }
-.video-detail .container {
+.video-detail .my-container {
   padding: 0 !important;
 }
-.video-detail .container .row {
+.video-detail .my-container .row {
   flex-direction: column;
   gap: 0 !important;
 }
-.video-detail .container .row .video-single a {
+.video-detail .my-container .row .video-single a {
   display: flex;
   align-items: flex-start;
 }
-.video-detail .container .row .video-single a span {
+.video-detail .my-container .row .video-single a span {
   font-size: 15px;
 }
-.video-detail .container .row .video-single a p {
+.video-detail .my-container .row .video-single a p {
   padding-top: 10px;
   width: 200px;
   font-size: 15px;
 }
-.video-detail .container .row .video-single img {
+.video-detail .my-container .row .video-single img {
   margin-right: 5px;
   width: 180px;
   height: 130px;
@@ -201,39 +202,39 @@ body ::-webkit-scrollbar-thumb {
 #slug {
   margin-top: 100px;
 }
-#slug .container {
+#slug .my-container {
   padding: 0 50px;
 }
-#slug .container .row {
+#slug .my-container .row {
   display: flex;
   width: 100%;
   gap: 30px;
   justify-content: space-between;
 }
-#slug .container .row .left {
+#slug .my-container .row .left {
   width: 100%;
 }
-#slug .container .row .left h6 {
+#slug .my-container .row .left h6 {
   padding-top: 20px;
   font-size: 20px;
   color: #fff;
   margin-bottom: 20px;
 }
-#slug .container .row .left p {
+#slug .my-container .row .left p {
   color: #fff;
   font-size: 18px;
 }
-#slug .container .row .left div {
+#slug .my-container .row .left div {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: space-between;
 }
-#slug .container .row .left div div {
+#slug .my-container .row .left div div {
   display: flex;
   justify-content: flex-end;
 }
-#slug .container .row .left div div span {
+#slug .my-container .row .left div div span {
   margin-left: 20px;
   color: #000;
   font-weight: 600;
@@ -241,10 +242,10 @@ body ::-webkit-scrollbar-thumb {
   border-radius: 30px;
   padding: 10px 15px;
 }
-#slug .container .row .left div p {
+#slug .my-container .row .left div p {
   width: 100%;
 }
-#slug .container .row .left .player {
+#slug .my-container .row .left .player {
   width: 100% !important;
   border-radius: 20px !important;
   height: 500px !important;
@@ -254,39 +255,39 @@ body ::-webkit-scrollbar-thumb {
   #slug {
     margin-top: 60px;
   }
-  #slug .container {
+  #slug .my-container {
     padding: 0 15px;
   }
-  #slug .container .row {
+  #slug .my-container .row {
     display: flex;
     width: 100%;
     gap: 30px;
     justify-content: space-between;
     flex-direction: column;
   }
-  #slug .container .row .left .player {
+  #slug .my-container .row .left .player {
     height: 530px !important;
   }
-  #slug .container .row .left div {
+  #slug .my-container .row .left div {
     flex-direction: column;
   }
-  #slug .container .row .left div p {
+  #slug .my-container .row .left div p {
     margin-top: 10px;
     font-size: 15px;
   }
-  #slug .container .row .left div div {
+  #slug .my-container .row .left div div {
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
   }
-  #slug .container .row .left div div span {
+  #slug .my-container .row .left div div span {
     margin-top: 10px;
     font-size: 15px;
   }
-  #slug .container .row .left div div span:first-child {
+  #slug .my-container .row .left div div span:first-child {
     margin-left: 0;
   }
-  #slug .container .row .left h6 {
+  #slug .my-container .row .left h6 {
     padding-top: 10px;
     font-size: 16px;
     margin-bottom: 0px;
@@ -294,7 +295,7 @@ body ::-webkit-scrollbar-thumb {
   #video {
     margin-top: 60px;
   }
-  #video .container .row {
+  #video .my-container .row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     justify-content: space-between;
@@ -303,20 +304,20 @@ body ::-webkit-scrollbar-thumb {
   .video-single {
     width: 100%;
   }
-  .video-detail .container .row {
+  .video-detail .my-container .row {
     grid-template-columns: repeat(1, 1fr) !important;
   }
-  .video-detail .container .row .video-single a p {
+  .video-detail .my-container .row .video-single a p {
     width: 100%;
   }
-  .video-detail .container .row .video-single img {
+  .video-detail .my-container .row .video-single img {
     margin-right: 5px;
     width: 180px;
     height: 130px;
   }
 }
 @media only screen and (max-width: 992px) {
-  #header .container {
+  #header .my-container {
     padding: 0 15px;
   }
   #category {
@@ -325,18 +326,18 @@ body ::-webkit-scrollbar-thumb {
   #video {
     margin-top: 90px;
   }
-  #video .container {
+  #video .my-container {
     padding: 0 15px;
   }
-  #video .container .row {
+  #video .my-container .row {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 @media only screen and (max-width: 678px) {
-  #header .container {
+  #header .my-container {
     padding: 0 15px;
   }
-  #header .container .row .left img {
+  #header .my-container .row .left img {
     height: 45px;
     width: 90px;
     -o-object-fit: cover;
@@ -346,19 +347,19 @@ body ::-webkit-scrollbar-thumb {
     padding: 0 15px 15px;
     top: 75px;
   }
-  #category .container .swiper {
+  #category .my-container .swiper {
     padding-right: 25px;
   }
-  #category .container .swiper button {
+  #category .my-container .swiper button {
     font-size: 13px;
   }
   #video {
     margin-top: 80px;
   }
-  #video .container {
+  #video .my-container {
     padding: 0px;
   }
-  #video .container .row {
+  #video .my-container .row {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
   }
@@ -385,11 +386,11 @@ body ::-webkit-scrollbar-thumb {
   #search i {
     font-size: 17px;
   }
-  .video-detail .container .row a {
+  .video-detail .my-container .row a {
     flex-direction: column;
     margin-bottom: 10px;
   }
-  .video-detail .container .row a img {
+  .video-detail .my-container .row a img {
     width: 100% !important;
     height: 215px !important;
   }
@@ -412,28 +413,28 @@ body ::-webkit-scrollbar-thumb {
   #slug{
      margin-top:72px;
   }
-  #slug .container {
+  #slug .my-container {
     padding: 0;
   }
-  #slug .container .row .left h6 {
+  #slug .my-container .row .left h6 {
     padding-left: 10px;
   }
-  #slug .container .row .left p {
+  #slug .my-container .row .left p {
     padding-left: 10px;
   }
-  #slug .container .row .left div div.datas {
+  #slug .my-container .row .left div div.datas {
     padding-left: 10px;
     margin-bottom: 10px;
   }
-  #slug .container .row .left div div span {
+  #slug .my-container .row .left div div span {
     margin-left: 15px;
     font-size: 14px;
     padding: 7px 10px;
   }
-  #slug .container .row .left div p {
+  #slug .my-container .row .left div p {
     width: 100%;
   }
-  #slug .container .row .left .player {
+  #slug .my-container .row .left .player {
     width: 100% !important;
     border-radius: 20px !important;
     height: 225px !important;

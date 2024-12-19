@@ -38,7 +38,7 @@ $color-2:#000;
   top: 0;
   background: $color-2;
 
-  .container {
+  .my-container {
     padding: 0 50px;
 
     .row {
@@ -109,7 +109,7 @@ $color-2:#000;
   background: $color-2;
   padding-bottom: 20px;
 
-  .container {
+  .my-container {
 
     .swiper {
       button {
@@ -140,7 +140,7 @@ $color-2:#000;
 #video {
   margin-top: 80px;
 
-  .container {
+  .my-container {
     padding: 20px 45px;
 
     .row {
@@ -156,7 +156,7 @@ $color-2:#000;
   margin-top: 0 !important;
   margin-top: -18px !important;
 
-  .container {
+  .my-container {
     padding: 0 !important;
 
     .row {
@@ -234,7 +234,7 @@ $color-2:#000;
 #slug {
   margin-top: 100px;
 
-  .container {
+  .my-container {
     padding: 0 50px;
 
     .row {
@@ -297,7 +297,7 @@ $color-2:#000;
   #slug {
     margin-top: 60px;
 
-    .container {
+    .my-container {
       padding: 0 15px;
 
       .row {
@@ -349,7 +349,7 @@ $color-2:#000;
   #video {
     margin-top: 60px;
 
-    .container {
+    .my-container {
 
       .row {
         display: grid;
@@ -366,7 +366,7 @@ $color-2:#000;
 
   .video-detail {
 
-    .container {
+    .my-container {
 
       .row {
         grid-template-columns: repeat(1, 1fr) !important;
@@ -392,7 +392,7 @@ $color-2:#000;
 
 @media only screen and (max-width:992px) {
   #header {
-    .container {
+    .my-container {
       padding: 0 15px;
     }
   }
@@ -404,7 +404,7 @@ $color-2:#000;
   #video {
     margin-top: 90px;
 
-    .container {
+    .my-container {
       padding: 0 15px;
 
       .row {
@@ -416,7 +416,7 @@ $color-2:#000;
 
 @media only screen and (max-width:678px) {
   #header {
-    .container {
+    .my-container {
       padding: 0 15px;
 
       .row {
@@ -435,7 +435,7 @@ $color-2:#000;
     padding: 0 15px 15px;
     top: 75px;
 
-    .container {
+    .my-container {
       .swiper {
         padding-right: 25px;
 
@@ -449,7 +449,7 @@ $color-2:#000;
   #video {
     margin-top: 80px;
 
-    .container {
+    .my-container {
       padding: 0px;
 
       .row {
@@ -485,7 +485,7 @@ $color-2:#000;
   }
 
   .video-detail {
-    .container {
+    .my-container {
       .row {
         a {
           flex-direction: column;
@@ -523,7 +523,7 @@ $color-2:#000;
 
   #slug {
     margin-top:72px;
-    .container {
+    .my-container {
       padding: 0;
 
       .row {
