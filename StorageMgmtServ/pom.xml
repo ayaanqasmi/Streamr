@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cc</groupId>
-	<artifactId>StorageManagement</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>StorageMgmtServ</artifactId>
+	<version>0.0.1</version>
 	<name>Storage Management Microservice</name>
 	<description>Cloud Computing project&apos;s storage management microservice</description>
 	<url/>
@@ -45,6 +45,19 @@
 			<artifactId>google-cloud-storage</artifactId>
 			<version>2.28.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<version>3.3.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
