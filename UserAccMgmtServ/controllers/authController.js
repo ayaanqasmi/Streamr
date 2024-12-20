@@ -15,6 +15,7 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("no user exists");
   }
   if (user && bcrypt.compareSync(password, user.password)) {
+    
     var accessToken = jwt.sign(
       {
         user: {
@@ -29,7 +30,7 @@ const login = asyncHandler(async (req, res) => {
 
     res.status(200).json({ token: accessToken });
   } else {
-    res.status(400).json * { msg: "invalid credentials" };
+    res.status(400).json({ msg: "invalid credentials" });
     throw new Error("invalid credentials");
   }
 });

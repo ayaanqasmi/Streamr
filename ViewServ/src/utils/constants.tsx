@@ -5,5 +5,6 @@ export const categories: CategoryButton[] = [
     { name: 'Upload', url: '/upload' },
     { name: 'Account', url: '/account' },
     { name: 'Log in', url: '/login' },
+    { name: 'Log out', url: "/"}
 ];
 

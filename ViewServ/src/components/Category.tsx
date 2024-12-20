@@ -5,9 +5,10 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Category } from '@/types/Category';
 import Link from 'next/link';
+import useAuthToken from '@/hooks/useAuthToken';
 
 const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory }) => {
-
+    const token = useAuthToken();
     return (
         <section id='category'>
             <div className="my-container">
@@ -33,19 +34,31 @@ const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory })
                     freeMode={true}
                     className="mySwiper"
                 >
-                    {categories.map((el, idx) => (
-                        <SwiperSlide key={idx}>
-                            <button
-                                className={el.name === selectedCategory ? 'active' : ''}
-                                // onClick={() => setSelectedCategory(el.name)}
-                                onClick={() => window.location.href = el.url}
-                            >{el.name}</button>
-                            {/* <Link href={el.url} className={el.name === selectedCategory ? 'active' : ''}
-                            >
-                            {el.name}
-                            </Link> */}
-                        </SwiperSlide>
-                    ))}
+                    {categories.map((el, idx) => {
+                        if (token){
+                            if (el.name=="Log in"){
+                                return;
+                            }
+                        }else{
+                            if(el.name=="Log out" || el.name=="Upload" || el.name=="Account"){
+                                return;
+                            }
+                        }
+                        return (
+                                                
+                            <SwiperSlide key={idx}>
+                                <button
+                                    className={el.name === selectedCategory ? 'active' : ''}
+                                    // onClick={() => setSelectedCategory(el.name)}
+                                    onClick={() => window.location.href = el.url}
+                                >{el.name}</button>
+                                {/* <Link href={el.url} className={el.name === selectedCategory ? 'active' : ''}
+                                >
+                                {el.name}
+                                </Link> */}
+                            </SwiperSlide>
+                        )
+                    })}
                 </Swiper>
             </div>
         </section>
