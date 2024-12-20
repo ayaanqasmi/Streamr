@@ -114,6 +114,32 @@ export function DataTableDemo() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+  const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
+
+  React.useEffect(() => {
+    setSelectedIds(Object.keys(rowSelection).map(id => parseInt(id)));
+  }, [rowSelection]);
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.length > 0) {
+      try {
+        const response = await fetch('/api/videos/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ids: selectedIds }),
+        });
+        if (response.ok) {
+          console.log('Selected videos deleted successfully');
+        } else {
+          console.error('Failed to delete selected videos');
+        }
+      } catch (error) {
+        console.error('Error deleting selected videos:', error);
+      }
+    }
+  };
 
   const table = useReactTable({
     data: videos,
@@ -138,6 +164,20 @@ export function DataTableDemo() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <h1 className="text-2xl">Your videos</h1>
+        <div className="flex-1 text-sm text-muted-foreground text-right">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDeleteSelected}
+            disabled={selectedIds.length === 0}
+          >
+            Delete selected
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -190,10 +230,6 @@ export function DataTableDemo() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
