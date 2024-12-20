@@ -16,8 +16,15 @@ public interface VideoRepo extends MongoRepository<VideoModel, String> {
 
     List<VideoModel> findAllByUserId(@NotNull(message = "User Id can not be null") String userId);
 
-
     @Aggregation(pipeline = { "{ $sample: { size: 30 } }" })
     List<VideoModel> findRandomVideos();
+
+    void deleteAllByUserId(@NotNull(message = "User Id can not be null") String userId);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $group: { _id: null, totalSize: { $sum: \"$size\" } } }"
+    })
+    Long calculateTotalStorageUsedByUser(String userId);
 
 }
