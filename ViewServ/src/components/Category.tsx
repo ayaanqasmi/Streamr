@@ -3,11 +3,12 @@ import { categories } from '../utils/constants';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Category } from '@/types/Category';
+import { CategoryType } from '@/types/Category';
 import Link from 'next/link';
 import useAuthToken from '@/hooks/useAuthToken';
+import logOut from '@/utils/logOut';
 
-const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory }) => {
+const Category: React.FC<CategoryType> = ({ selectedCategory, setSelectedCategory }) => {
     const token = useAuthToken();
     return (
         <section id='category'>
@@ -50,7 +51,13 @@ const Category: React.FC<Category> = ({ selectedCategory, setSelectedCategory })
                                 <button
                                     className={el.name === selectedCategory ? 'active' : ''}
                                     // onClick={() => setSelectedCategory(el.name)}
-                                    onClick={() => window.location.href = el.url}
+                                    onClick={() => {
+                                        if(el.name=="Log out"){
+                                            logOut();
+                                        }
+                                        window.location.href = el.url;
+                                        
+                                    }}
                                 >{el.name}</button>
                                 {/* <Link href={el.url} className={el.name === selectedCategory ? 'active' : ''}
                                 >

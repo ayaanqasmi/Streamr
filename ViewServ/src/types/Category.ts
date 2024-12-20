@@ -3,7 +3,7 @@ export type CategoryButton = {
     url: string;
 }
 
-export type Category = {
+export type CategoryType = {
     selectedCategory: string;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
 }
