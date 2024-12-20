@@ -104,6 +104,44 @@ export const columns: ColumnDef<Videos>[] = [
       <img src={row.getValue("thumbnail")} alt={row.getValue("title")} className="w-16 h-16" />
     ),
   },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const video = row.original; // Get the original video data
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                // Replace with actual watch video functionality
+                console.log(`Watching video with ID: ${video.id}`);
+              }}
+            >
+              Watch video
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                // Replace with actual edit video functionality
+                console.log(`Editing video with ID: ${video.id}`);
+              }}
+            >
+              Edit video
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+    enableSorting: false, // Disable sorting for actions column
+  },
 ]
 
 export function DataTableDemo() {
