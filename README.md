@@ -21,3 +21,10 @@ Get total usage data for the day | GET | http://localhost:4000/api/usage/total |
 Upload file | POST | http://localhost:8080/api/storage/upload | Protected
 Get file by name | GET | http://localhost:8080/api/storage/get/{name} | Protected
 Delete file by name | DELETE | http://localhost:8080/api/storage/delete/{name} | Protected
+
+
+
+
+proxy server: localhost:8000
+
+for example, localhost:3000 hosts an api service. 

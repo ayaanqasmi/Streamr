@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./ViewServ
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - user_account_management
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:4000/api
+      - RAPID_API_KEY='ce87d3f1ecmshcf847ea6dab43f1p1c1367jsn680157765b67'
+
+  user_account_management:
+    build:
+      context: ./UserAccMgmtServ
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+
+  usage_monitoring:
+    build:
+      context: ./UsageMntrServ
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+
+  storage_management:
+    build:
+      context: ./StorageMgmtServ
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/project-credentials.json
