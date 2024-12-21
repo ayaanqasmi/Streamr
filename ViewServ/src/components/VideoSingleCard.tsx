@@ -2,19 +2,19 @@ import { VideoCardProps } from '@/types/Video'
 import Link from 'next/link'
 import React from 'react'
 
-const VideoSingleCard: React.FC<VideoCardProps> = ({ video: { id: { videoId }, snippet, }, }) => {
+const VideoSingleCard = ({ video}) => {
     return (
         <section className='video-single'>
             <Link href={
-                videoId ? `/video/${videoId}` : `/video/cV2gBU6hKfY`
+                video.id ? `/video/${video.id}` : `/video/cV2gBU6hKfY`
             }>
-                <img src={snippet?.thumbnails?.high?.url} alt={snippet?.channelTitle} />
+                <img src={`data:image/png;base64, ${video?.thumbnail}`} alt={video?.title} />
                 <div className="content">
                     <p>
-                        {snippet.title || snippet.description}
+                        {video.title || video.description}
                     </p>
                     <span className="title">
-                        {snippet?.channelTitle}
+                        {video?.title}
                     </span>
                 </div>
             </Link>

@@ -12,8 +12,11 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
-        setVideo(data.items);
+        // const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
+        const data = await fetch("http://localhost:8080/api/storage/get-random")
+        const vids = await data.json()
+        console.log(vids);
+        setVideo(vids);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
