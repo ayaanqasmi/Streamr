@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import useAuthToken from "@/hooks/useAuthToken";
 
 export function UploadForm({
   className,
@@ -26,7 +27,8 @@ export function UploadForm({
   const [description, setDescription] = useState(videoDetails?.description || "");
   const [thumbnail, setThumbnail] = useState<File | null>(videoDetails?.thumbnail || null);
   const [videoFile, setVideoFile] = useState<File | null>(videoDetails?.videoFile || null);
-
+  const token = useAuthToken()
+    
   useEffect(() => {
     if (videoDetails) {
       setTitle(videoDetails.title || "");
@@ -39,7 +41,6 @@ export function UploadForm({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -47,9 +48,12 @@ export function UploadForm({
     if (videoFile) formData.append("video", videoFile);
 
     try {
-      const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : "YOUR_API_ENDPOINT_HERE", {
+      const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : "http://localhost:8080/api/storage/upload", {
         method: isEditMode ? "PUT" : "POST",
         body: formData,
+        headers:{
+          "Authorization": String(token)
+        }
       });
 
       if (!response.ok) {
