@@ -15,8 +15,12 @@ import { Label } from "@/components/ui/label"
 export function UploadForm({
   className,
   videoDetails,
+  isEditMode = false,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { videoDetails?: { title?: string; description?: string; thumbnail?: File; videoFile?: File } }) {
+}: React.ComponentPropsWithoutRef<"div"> & { 
+  videoDetails?: { title?: string; description?: string; thumbnail?: File; videoFile?: File },
+  isEditMode?: boolean
+}) {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState(videoDetails?.title || "");
   const [description, setDescription] = useState(videoDetails?.description || "");
@@ -43,8 +47,8 @@ export function UploadForm({
     if (videoFile) formData.append("video", videoFile);
 
     try {
-      const response = await fetch("YOUR_API_ENDPOINT_HERE", {
-        method: "POST",
+      const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : "YOUR_API_ENDPOINT_HERE", {
+        method: isEditMode ? "PUT" : "POST",
         body: formData,
       });
 
