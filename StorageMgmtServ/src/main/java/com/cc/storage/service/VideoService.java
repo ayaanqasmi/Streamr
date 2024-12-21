@@ -14,14 +14,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -94,18 +97,32 @@ public class VideoService {
                 throw new RuntimeException("No video found against id: " + videoId);
             }
 
+            logger.info("Video Path Exixts");
             Blob blob = storage.get(BUCKET_NAME, optionalVideoModel.get().getVideoPath());
 
             if (blob == null) {
                 throw new IOException(String.format("Could not return video with id: '%s'!", videoId));
             }
+            logger.info("Video Found! Retuning it.");
 
-            return ResponseEntity.status(200).body(blob.getContent());
+            InputStream inputStream = new ByteArrayInputStream(blob.getContent());
+            InputStreamResource resource = new InputStreamResource(inputStream);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.valueOf("video/mp4")); // Correct content type for MP4
+            headers.setContentDispositionFormData("inline", optionalVideoModel.get().getTitle() + ".mp4");
+            headers.setContentLength(blob.getSize());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .headers(headers)
+                    .body(resource);
 
         } catch (Exception e) {
             return manageTokenException(e);
         }
     }
+
+
 
     public ResponseEntity<List<VideoModel>> getRandomVideos() {
         List<VideoModel> videoModels = videoRepo.findRandomVideos();
