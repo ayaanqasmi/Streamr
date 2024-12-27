@@ -1,5 +1,6 @@
 package com.cc.storage.controller;
 
+import com.cc.storage.config.CustomMediaType;
 import com.cc.storage.model.VideoModel;
 import com.cc.storage.model.dao.VideoDAO;
 import com.cc.storage.service.VideoService;
@@ -55,9 +56,9 @@ public class VideoController {
     }
 
 
-    @GetMapping(value = "/get/{videoId}", produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.TEXT_PLAIN_VALUE})
+    @GetMapping(value = "/get/{videoId}")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Video Retrieved Successfully", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
+            @ApiResponse(responseCode = "200", description = "Video Retrieved Successfully", content = @Content(mediaType = MediaType.ALL_VALUE)),
             @ApiResponse(responseCode = "409", description = "Video not found against the given Id", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE))
     })
     @Operation(summary = "Get video by ID", description = "Retrieves video metadata and content by its ID.")
@@ -112,11 +113,12 @@ public class VideoController {
             @ApiResponse(responseCode = "200", description = "All Videos Deleted Successfully whose Id found"),
     })
     public ResponseEntity<String>
-    deleteMyAllVideos(
+    deleteMyVideos(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String authorizationHeader,
             @RequestBody List<String> videoIds
     ) {
         logger.info("/api/storage/delete/my endpoint called");
+        logger.info("Requested to delete: {}", videoIds);
         return userStorageService.deleteMultipleUserVideos(authorizationHeader, videoIds);
     }
 }

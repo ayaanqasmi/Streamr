@@ -18,7 +18,7 @@ export function UploadForm({
   videoDetails,
   isEditMode = false,
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & { 
+}: React.ComponentPropsWithoutRef<"div"> & {
   videoDetails?: { title?: string; description?: string; thumbnail?: File; videoFile?: File },
   isEditMode?: boolean
 }) {
@@ -28,7 +28,7 @@ export function UploadForm({
   const [thumbnail, setThumbnail] = useState<File | null>(videoDetails?.thumbnail || null);
   const [videoFile, setVideoFile] = useState<File | null>(videoDetails?.videoFile || null);
   const token = useAuthToken()
-    
+
   useEffect(() => {
     if (videoDetails) {
       setTitle(videoDetails.title || "");
@@ -51,7 +51,7 @@ export function UploadForm({
       const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : "http://localhost:8080/api/storage/upload", {
         method: isEditMode ? "PUT" : "POST",
         body: formData,
-        headers:{
+        headers: {
           "Authorization": String(token)
         }
       });
