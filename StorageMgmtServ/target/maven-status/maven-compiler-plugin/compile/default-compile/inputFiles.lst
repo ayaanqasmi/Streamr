@@ -1,0 +1,11 @@
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/StorageManagementMicroserviceApplication.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/config/BeanConfiguration.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/config/CustomMediaType.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/config/WebConfiguration.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/controller/VideoController.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/model/UserModel.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/model/UserResponseWrapper.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/model/VideoModel.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/model/dao/VideoDAO.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/repository/VideoRepo.java
+/home/haris/Documents/CC Project/Streamr/StorageMgmtServ/src/main/java/com/cc/storage/service/VideoService.java
