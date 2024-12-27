@@ -35,9 +35,6 @@ public class VideoService {
     @Value("${video.storage.path}")
     private String VIDEO_ROOT_PATH;
 
-    @Value("${thumbnail.storage.path}")
-    private String THUMBNAIL_ROOT_PATH;
-
     @Value("${gcp.bucket.name}")
     private String BUCKET_NAME;
 
@@ -77,7 +74,7 @@ public class VideoService {
 //                throw new IllegalArgumentException("50 mb limit exceeded.");
 //            }
 
-            check100MbBandwidthLimit((double) video.getBytes().length / (1024 * 1024));
+//            check100MbBandwidthLimit((double) video.getBytes().length / (1024 * 1024));
 
             uploadVideoAndThumbnail(user, videoDAO, video, thumbnail);
 
@@ -97,13 +94,13 @@ public class VideoService {
                 throw new RuntimeException("No video found against id: " + videoId);
             }
 
-            logger.info("Video Path Exixts");
+            logger.info("Video Path Exists");
             Blob blob = storage.get(BUCKET_NAME, optionalVideoModel.get().getVideoPath());
 
             if (blob == null) {
                 throw new IOException(String.format("Could not return video with id: '%s'!", videoId));
             }
-            logger.info("Video Found! Retuning it.");
+            logger.info("Video Found!");
 
             InputStream inputStream = new ByteArrayInputStream(blob.getContent());
             InputStreamResource resource = new InputStreamResource(inputStream);
@@ -113,6 +110,7 @@ public class VideoService {
             headers.setContentDispositionFormData("inline", optionalVideoModel.get().getTitle() + ".mp4");
             headers.setContentLength(blob.getSize());
 
+            logger.info("Video compiled! returning it.");
             return ResponseEntity.status(HttpStatus.OK)
                     .headers(headers)
                     .body(resource);
@@ -151,7 +149,7 @@ public class VideoService {
     }
 
 
-    private ResponseEntity<String> deleteVideo(String authorizationHeader, String videoId, List<String> deletedList) {
+    private ResponseEntity<String> deleteVideo(String authorizationHeader, String videoId) {
         try {
             UserModel user = validateToken(authorizationHeader);
 
@@ -166,16 +164,22 @@ public class VideoService {
                 throw new IllegalArgumentException("No Video found against given Id");
             }
 
-            videoRepo.deleteById(videoId);
-            logger.info("Video '{}' deleted successfully", videoModel.get());
+//            check100MbBandwidthLimit((double) videoModel.get().getSize() / (1024 * 1024));
+
+            if (videoModel.get().getVideoPath() == null && videoModel.get().getVideoPath().isEmpty()){
+                logger.error("Path is empty");
+                throw new IllegalArgumentException("Path is empty");
+            }
 
             boolean deleted = storage.delete(BUCKET_NAME, videoModel.get().getVideoPath());
+
+            videoRepo.delete(videoModel.get());
+            logger.info("Video '{}' deleted successfully", videoModel.get());
 
             if (!deleted) {
                 throw new IOException(String.format("Could not delete video with id: '%s'!", videoId));
             }
-            check100MbBandwidthLimit((double) videoModel.get().getSize() / (1024 * 1024));
-            deletedList.add(videoId);
+
             return ResponseEntity.status(200).body(String.format("Video with id: '%s' for user '%s' deleted successfully!", videoId, user.getUsername()));
         } catch (Exception e) {
             return manageTokenException(e);
@@ -183,22 +187,17 @@ public class VideoService {
     }
 
 
-    @Transactional
     public ResponseEntity<String> deleteMultipleUserVideos(String authorizationHeader, List<String> videoIds) {
         try {
             UserModel user = validateToken(authorizationHeader);
 
-            List<String> deletedVideos = new ArrayList<>();
-            for (int i = 0; i < videoIds.size(); i++) {
-                deleteVideo(authorizationHeader, videoIds.get(i), deletedVideos);
+            for (String videoId : videoIds) {
+                try {
+                    deleteVideo(authorizationHeader, videoId);
+                } catch (Exception ignored) {
+
+                }
             }
-
-            storage.delete(BUCKET_NAME, user.getId());
-            logger.info("Videos deleted for user: {}", user.getUsername());
-
-            videoRepo.deleteAllByUserId(user.getId());
-            logger.info("Video's data deleted: {}", deletedVideos);
-
             return ResponseEntity.status(200).body(String.format("Videos deleted successfully for user '%s'!", user.getUsername()));
         }
         catch (Exception e) {
@@ -285,7 +284,6 @@ public class VideoService {
     private void uploadVideoAndThumbnail(UserModel user, VideoDAO videoDAO, MultipartFile video, MultipartFile thumbnail) throws IOException {
 
         String videoPath = VIDEO_ROOT_PATH + File.separator + user.getId() + File.separator + videoDAO.getTitle();
-        String thumbnailPath = THUMBNAIL_ROOT_PATH + File.separator + user.getId() + File.separator + videoDAO.getTitle();
 
         if (doesFileExist(BUCKET_NAME, videoPath)) {
             throw new IllegalArgumentException("Video with same title already exists.");
@@ -295,12 +293,6 @@ public class VideoService {
         BlobInfo blobInfo = BlobInfo.newBuilder(BUCKET_NAME, videoPath).build();
         storage.create(blobInfo, video.getBytes());
         logger.info("Video Uploaded Successfully at {}", videoPath);
-
-        if (thumbnail !=null && !thumbnail.isEmpty()) {
-            blobInfo = BlobInfo.newBuilder(BUCKET_NAME, thumbnailPath).build();
-            storage.create(blobInfo, thumbnail.getBytes());
-            logger.info("Thumbnail Uploaded Successfully at {}", thumbnailPath);
-        }
 
         storeVideoData(videoDAO.getTitle(), videoDAO.getDescription(), user.getId(), thumbnail, videoPath, video.getBytes().length);
     }

@@ -35,33 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-const videos: Videos = [
-    {
-      id: 1,
-      thumbnail: "https://openclipart.org/image/800px/348753",
-      title: "Introduction to Programming",
-    },
-    {
-      id: 2,
-      thumbnail: "https://openclipart.org/image/800px/348753",
-      title: "Advanced JavaScript Concepts",
-    },
-    {
-      id: 3,
-      thumbnail: "https://openclipart.org/image/800px/348753",
-      title: "React for Beginners",
-    },
-    {
-      id: 4,
-      thumbnail: "https://openclipart.org/image/800px/348753",
-      title: "Understanding TypeScript",
-    },
-    {
-      id: 5,
-      thumbnail: "https://openclipart.org/image/800px/348753",
-      title: "Building REST APIs with Node.js",
-    },
-  ];
+import useAuthToken from "@/hooks/useAuthToken"
 
 export type Videos = {
   id: number
@@ -145,6 +119,9 @@ export const columns: ColumnDef<Videos>[] = [
 ]
 
 export function DataTableDemo() {
+  const [videos, setVideos] = React.useState([])
+  const token = useAuthToken()
+  console.log(token)
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -157,19 +134,42 @@ export function DataTableDemo() {
   React.useEffect(() => {
     setSelectedIds(Object.keys(rowSelection).map(id => parseInt(id)));
   }, [rowSelection]);
-
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
+        const data = await fetch("http://localhost:8080/api/storage/videos/my", {
+          method: "GET",
+          headers: {
+            'Authorization': token
+          }
+        })
+        const vids = await data.json()
+        console.log(vids);
+        setVideos(vids);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [token])
   const handleDeleteSelected = async () => {
     if (selectedIds.length > 0) {
       try {
-        const response = await fetch('/api/videos/delete', {
-          method: 'POST',
+        const selectedVideosIds = selectedIds.map(index => videos[index].id);
+
+        console.log(selectedVideosIds)
+        const response = await fetch('http://localhost:8080/api/storage/delete/my', {
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': token
           },
-          body: JSON.stringify({ ids: selectedIds }),
+          body: JSON.stringify(selectedVideosIds),
         });
         if (response.ok) {
           console.log('Selected videos deleted successfully');
+          alert("window deleted")
         } else {
           console.error('Failed to delete selected videos');
         }
@@ -228,9 +228,9 @@ export function DataTableDemo() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
