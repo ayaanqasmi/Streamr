@@ -1,0 +1,13 @@
+com/cc/storage/model/VideoModel$VideoModelBuilder.class
+com/cc/storage/config/WebConfiguration.class
+com/cc/storage/config/CustomMediaType.class
+com/cc/storage/service/VideoService.class
+com/cc/storage/model/UserResponseWrapper.class
+com/cc/storage/model/dao/VideoDAO.class
+com/cc/storage/model/UserModel$UserModelBuilder.class
+com/cc/storage/config/BeanConfiguration.class
+com/cc/storage/model/UserModel.class
+com/cc/storage/StorageManagementMicroserviceApplication.class
+com/cc/storage/controller/VideoController.class
+com/cc/storage/model/VideoModel.class
+com/cc/storage/repository/VideoRepo.class
