@@ -3,21 +3,21 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
-// Helper function to log messages
+import axios from "axios"
+
 const logMessage = async (req, message) => {
   const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress || "Unknown IP";
   const logData = { message: `${ip} ${message}` };
 
   try {
-    await fetch("https://logserv-1012918474165.us-central1.run.app/api/logs", {
-      method: "POST",
+    await axios.post("https://logserv-1012918474165.us-central1.run.app/api/logs", logData, {
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(logData),
     });
   } catch (error) {
     console.error("Failed to send log message:", error.message);
   }
 };
+
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
