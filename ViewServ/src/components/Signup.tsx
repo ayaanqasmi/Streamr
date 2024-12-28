@@ -19,19 +19,23 @@ export function Signup({
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:4000/api/users/register", {
+    setLoading(true);
+    const response = await fetch(process.env.NEXT_PUBLIC_USER_API_BASE_URL+"api/users/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, username, password }),
     });
+    setLoading(false);
     console.log(response)
     if (response.ok) {
       console.log("User registered successfully");
+      window.location.href = '/login'; // Redirect to home page using window object
     } else {
       console.error("Registration failed");
     }
@@ -83,8 +87,12 @@ export function Signup({
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Sign up
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <span className="loader"></span>
+                ) : (
+                  "Sign up"
+                )}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">

@@ -48,7 +48,7 @@ export function UploadForm({
     if (videoFile) formData.append("video", videoFile);
 
     try {
-      const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : "http://localhost:8080/api/storage/upload", {
+      const response = await fetch(isEditMode ? "YOUR_UPDATE_API_ENDPOINT_HERE" : process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL+"api/storage/upload", {
         method: isEditMode ? "PUT" : "POST",
         body: formData,
         headers: {

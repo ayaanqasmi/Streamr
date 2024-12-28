@@ -75,7 +75,7 @@ export const columns: ColumnDef<Videos>[] = [
     accessorKey: "thumbnail",
     header: "Thumbnail",
     cell: ({ row }) => (
-      <img src={row.getValue("thumbnail")} alt={row.getValue("title")} className="w-16 h-16" />
+      <img src={`data:image/jpeg;base64,${row.getValue("thumbnail")}`} alt={row.getValue("title")} className="w-16 h-16" />
     ),
   },
   {
@@ -96,6 +96,7 @@ export const columns: ColumnDef<Videos>[] = [
             <DropdownMenuItem
               onClick={() => {
                 // Replace with actual watch video functionality
+                window.location.href = `/video/${video.id}`;
                 console.log(`Watching video with ID: ${video.id}`);
               }}
             >
@@ -130,6 +131,7 @@ export function DataTableDemo() {
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     setSelectedIds(Object.keys(rowSelection).map(id => parseInt(id)));
@@ -138,7 +140,7 @@ export function DataTableDemo() {
     const fetchData = async () => {
       try {
         // const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
-        const data = await fetch("http://localhost:8080/api/storage/videos/my", {
+        const data = await fetch(process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL+"api/storage/videos/my", {
           method: "GET",
           headers: {
             'Authorization': token
@@ -155,11 +157,11 @@ export function DataTableDemo() {
   }, [token])
   const handleDeleteSelected = async () => {
     if (selectedIds.length > 0) {
+      setIsLoading(true);
       try {
         const selectedVideosIds = selectedIds.map(index => videos[index].id);
-
-        console.log(selectedVideosIds)
-        const response = await fetch('http://localhost:8080/api/storage/delete/my', {
+        console.log(selectedVideosIds);
+        const response = await fetch(process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL + 'api/storage/delete/my', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -169,12 +171,23 @@ export function DataTableDemo() {
         });
         if (response.ok) {
           console.log('Selected videos deleted successfully');
-          alert("window deleted")
+          alert("Selected videos deleted successfully");
+          const data = await fetch(process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL + "api/storage/videos/my", {
+            method: "GET",
+            headers: {
+              'Authorization': token
+            }
+          });
+          const vids = await data.json();
+          setVideos(vids);
+          setSelectedIds([]);
         } else {
           console.error('Failed to delete selected videos');
         }
       } catch (error) {
         console.error('Error deleting selected videos:', error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -211,9 +224,9 @@ export function DataTableDemo() {
             variant="outline"
             size="sm"
             onClick={handleDeleteSelected}
-            disabled={selectedIds.length === 0}
+            disabled={selectedIds.length === 0 || isLoading}
           >
-            Delete selected
+            {isLoading ? "Deleting..." : "Delete selected"}
           </Button>
         </div>
       </div>

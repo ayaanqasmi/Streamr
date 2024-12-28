@@ -15,7 +15,7 @@ const Page: React.FC = () => {
         const fetchData = async () => {
             try {
                 // const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
-                const data = await fetch("http://localhost:8080/api/storage/get-random")
+                const data = await fetch(process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL+"api/storage/get-random")
                 const vids = await data.json()
                 console.log(vids);
                 setVideos(vids.filter(vid => {
@@ -34,7 +34,7 @@ const Page: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/storage/get/${getById}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL}/api/storage/get/${getById}`, {
                     method: 'GET'
                 });
 

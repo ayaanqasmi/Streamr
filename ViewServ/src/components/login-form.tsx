@@ -30,7 +30,7 @@ export function LoginForm({
       password,
     };
 
-    const response = await fetch("http://localhost:3000/api/auth/login", {
+    const response = await fetch(process.env.NEXT_PUBLIC_USER_API_BASE_URL+"api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +46,9 @@ export function LoginForm({
       console.log("Login successful, token saved in cookie");
       window.location.href = '/'; // Redirect to home page using window object
     } else {
-      console.error("Login failed");
+      const errorData = await response.json(); // Get error details
+      console.error("Error response:", errorData); // Log the error response
+      throw new Error(`Login failed: ${errorData.message || 'Unknown error'}`);
     }
   };
 
