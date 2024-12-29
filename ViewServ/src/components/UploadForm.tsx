@@ -57,11 +57,14 @@ export function UploadForm({
       });
 
       if (!response.ok) {
+        
         throw new Error("Network response was not ok");
       }
-
+      window.location.href = '/'; // Redirect to home page using window object
       console.log("Upload successful:", await response.json());
+      
     } catch (error) {
+      alert(error)
       console.error("Error uploading video:", error);
     } finally {
       setLoading(false);
