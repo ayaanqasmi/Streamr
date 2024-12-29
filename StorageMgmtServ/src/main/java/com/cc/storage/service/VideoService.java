@@ -70,11 +70,11 @@ public class VideoService {
             }
 
 
-//            if (exceeds50MbSizeLimit(user, video.getBytes().length)) {
-//                throw new IllegalArgumentException("50 mb limit exceeded.");
-//            }
+            if (exceeds50MbSizeLimit(user, video.getBytes().length)) {
+                throw new IllegalArgumentException("50 mb limit exceeded.");
+            }
 
-//            check100MbBandwidthLimit((double) video.getBytes().length / (1024 * 1024));
+            check100MbBandwidthLimit((double) video.getBytes().length / (1024 * 1024));
 
             uploadVideoAndThumbnail(user, videoDAO, video, thumbnail);
 
@@ -164,7 +164,7 @@ public class VideoService {
                 throw new IllegalArgumentException("No Video found against given Id");
             }
 
-//            check100MbBandwidthLimit((double) videoModel.get().getSize() / (1024 * 1024));
+            check100MbBandwidthLimit((double) videoModel.get().getSize() / (1024 * 1024));
 
             if (videoModel.get().getVideoPath() == null && videoModel.get().getVideoPath().isEmpty()){
                 logger.error("Path is empty");

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class VideoController {
         this.userStorageService = userStorageService;
     }
 
+    @Value("${log.base.url}")
+    private String LOG_BASE_URL;
+
     private void logRequest(String message, HttpServletRequest request) {
         String ip = request.getRemoteAddr();
         String fullMessage = ip + " " + message;
@@ -47,10 +51,9 @@ public class VideoController {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
-            String logBaseUrl = "${log.base.url}"; // Replace with actual value from application.properties
             Map<String, String> logRequest = new HashMap<>();
             logRequest.put("message", fullMessage);
-            restTemplate.postForEntity(logBaseUrl + "/api/logs", logRequest, String.class);
+            restTemplate.postForEntity(LOG_BASE_URL + "/api/logs", logRequest, String.class);
         } catch (Exception e) {
             logger.error("Failed to send log message: {}", e.getMessage());
         }
