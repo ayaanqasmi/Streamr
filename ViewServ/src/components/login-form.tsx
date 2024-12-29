@@ -42,7 +42,10 @@ export function LoginForm({
 
     if (response.ok) {
       const { token } = await response.json(); // Extract token from response
-      Cookies.set('jwt', token, { expires: 7 }); // Set cookie with token, expires in 7 days
+      const expirationTime = new Date();
+      expirationTime.setMinutes(expirationTime.getMinutes() + 120);
+      // Set the cookie with the JWT token and expiration time
+      Cookies.set('jwt', token, { expires: expirationTime });
       console.log("Login successful, token saved in cookie");
       window.location.href = '/'; // Redirect to home page using window object
     } else {

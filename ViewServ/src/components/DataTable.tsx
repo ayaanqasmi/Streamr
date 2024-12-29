@@ -132,12 +132,13 @@ export function DataTableDemo() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [selectedIds, setSelectedIds] = React.useState<number[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
-
+ 
   React.useEffect(() => {
     setSelectedIds(Object.keys(rowSelection).map(id => parseInt(id)));
   }, [rowSelection]);
   React.useEffect(() => {
     const fetchData = async () => {
+      
       try {
         // const data = await FetchApi(`search?part=snippet&q=${selectedCategory}`);
         const data = await fetch(process.env.NEXT_PUBLIC_STORAGE_API_BASE_URL+"api/storage/videos/my", {
@@ -152,6 +153,7 @@ export function DataTableDemo() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+    
     };
     fetchData();
   }, [token])

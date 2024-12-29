@@ -2,7 +2,22 @@ import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
-// Controller Functions for API Endpoints: api/user/*
+// Helper function to log messages
+import axios from "axios"
+
+const logMessage = async (req, message) => {
+  const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress || "Unknown IP";
+  const logData = { message: `${ip} ${message}` };
+
+  try {
+    await axios.post("https://logserv-1012918474165.us-central1.run.app/api/logs", logData, {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Failed to send log message:", error.message);
+  }
+};
+
 
 /**
  * @desc   Get all users
@@ -10,12 +25,19 @@ import bcrypt from "bcryptjs";
  * @access Private/Admin
  */
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password"); // Exclude passwords from response
-  if (!users || users.length === 0) {
-    res.status(404).json({ msg: "No users found" });
-    throw new Error("No users found");
+  try {
+    const users = await User.find().select("-password");
+    if (!users || users.length === 0) {
+      await logMessage(req, "Attempted to fetch users but none were found.");
+      res.status(404).json({ msg: "No users found" });
+      throw new Error("No users found");
+    }
+    await logMessage(req, "Fetched all users successfully.");
+    res.status(200).json(users);
+  } catch (error) {
+    await logMessage(req, `Error while fetching users: ${error.message}`);
+    throw error;
   }
-  res.status(200).json(users);
 });
 
 /**
@@ -24,12 +46,19 @@ const getUsers = asyncHandler(async (req, res) => {
  * @access Private
  */
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select("-password");
-  if (!user) {
-    res.status(404).json({ msg: "No user found" });
-    throw new Error("No user found");
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      await logMessage(req, `No user found with ID ${req.params.id}.`);
+      res.status(404).json({ msg: "No user found" });
+      throw new Error("No user found");
+    }
+    await logMessage(req, `Fetched user with ID ${req.params.id} successfully.`);
+    res.status(200).json(user);
+  } catch (error) {
+    await logMessage(req, `Error while fetching user by ID ${req.params.id}: ${error.message}`);
+    throw error;
   }
-  res.status(200).json(user);
 });
 
 /**
@@ -40,35 +69,36 @@ const getUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Input Validation
-  if (!username || !email || !password) {
-    res.status(400).json({ msg: "Enter all fields" });
-    throw new Error("Incomplete fields");
-  }
+  try {
+    if (!username || !email || !password) {
+      await logMessage(req, "Attempted registration with incomplete fields.");
+      res.status(400).json({ msg: "Enter all fields" });
+      throw new Error("Incomplete fields");
+    }
 
-  // Check if email already exists
-  const isEmail = await User.findOne({ email });
-  if (isEmail) {
-    res.status(400).json({ msg: "Email already in use" });
-    throw new Error("Email already in use");
-  }
+    const isEmail = await User.findOne({ email });
+    if (isEmail) {
+      await logMessage(req, `Registration failed: Email ${email} already in use.`);
+      res.status(400).json({ msg: "Email already in use" });
+      throw new Error("Email already in use");
+    }
 
-  // Hash the password
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
-  // Create the user
-  const newUser = await User.create({
-    username,
-    email,
-    password: hashedPassword,
-  });
+    const newUser = await User.create({ username, email, password: hashedPassword });
 
-  if (newUser) {
-    res.status(201).json({ _id: newUser.id, username: newUser.username });
-  } else {
-    res.status(400).json({ msg: "Could not create user" });
-    throw new Error("User not created");
+    if (newUser) {
+      await logMessage(req, `Registered user with ID ${newUser.id} successfully.`);
+      res.status(201).json({ _id: newUser.id, username: newUser.username });
+    } else {
+      await logMessage(req, "Registration failed: Could not create user.");
+      res.status(400).json({ msg: "Could not create user" });
+      throw new Error("User not created");
+    }
+  } catch (error) {
+    await logMessage(req, `Error while registering user: ${error.message}`);
+    throw error;
   }
 });
 
@@ -78,36 +108,41 @@ const registerUser = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updateUser = asyncHandler(async (req, res) => {
-  const auth = req.user;
+  try {
+    const auth = req.user;
 
-  // Authorization check
-  if (auth.id !== req.params.id) {
-    res.status(401).json({ msg: "Unauthorized" });
-    throw new Error("Unauthorized");
-  }
-
-  const user = await User.findById(req.params.id);
-
-  if (user) {
-    // Update fields if provided
-    user.username = req.body.username || user.username;
-    user.email = req.body.email || user.email;
-
-    if (req.body.password) {
-      const salt = bcrypt.genSaltSync(10);
-      user.password = bcrypt.hashSync(req.body.password, salt);
+    if (auth.id !== req.params.id) {
+      await logMessage(req, `Unauthorized attempt to update user ID ${req.params.id}.`);
+      res.status(401).json({ msg: "Unauthorized" });
+      throw new Error("Unauthorized");
     }
 
-    const updatedUser = await user.save();
+    const user = await User.findById(req.params.id);
 
-    res.status(200).json({
-      _id: updatedUser.id,
-      username: updatedUser.username,
-      email: updatedUser.email,
-    });
-  } else {
-    res.status(404).json({ msg: "User not found" });
-    throw new Error("User not found");
+    if (user) {
+      user.username = req.body.username || user.username;
+      user.email = req.body.email || user.email;
+
+      if (req.body.password) {
+        const salt = bcrypt.genSaltSync(10);
+        user.password = bcrypt.hashSync(req.body.password, salt);
+      }
+
+      const updatedUser = await user.save();
+      await logMessage(req, `Updated user with ID ${req.params.id} successfully.`);
+      res.status(200).json({
+        _id: updatedUser.id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+      });
+    } else {
+      await logMessage(req, `User with ID ${req.params.id} not found for update.`);
+      res.status(404).json({ msg: "User not found" });
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    await logMessage(req, `Error while updating user ID ${req.params.id}: ${error.message}`);
+    throw error;
   }
 });
 
@@ -120,36 +155,43 @@ const updateStorage = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { storageUsed } = req.body;
 
-  // Input Validation
-  if (typeof storageUsed !== "number") {
-    return res.status(400).json({ error: "Invalid storage amount provided." });
-  }
+  try {
+    if (typeof storageUsed !== "number") {
+      await logMessage(req, `Invalid storage amount provided for user ID ${userId}.`);
+      return res.status(400).json({ error: "Invalid storage amount provided." });
+    }
 
-  // Find user and validate status
-  const user = await User.findById(userId);
-  if (!user) {
-    return res.status(404).json({ error: "User not found." });
-  }
-  if (user.accountStatus !== "active") {
-    return res.status(400).json({ error: "User account is restricted." });
-  }
+    const user = await User.findById(userId);
+    if (!user) {
+      await logMessage(req, `User with ID ${userId} not found for storage update.`);
+      return res.status(404).json({ error: "User not found." });
+    }
+    if (user.accountStatus !== "active") {
+      await logMessage(req, `Restricted user ID ${userId} attempted to update storage.`);
+      return res.status(400).json({ error: "User account is restricted." });
+    }
 
-  // Check storage limit
-  if (user.storageUsed + storageUsed > 50) {
-    return res.status(400).json({ error: "User storage limit exceeded." });
+    if (user.storageUsed + storageUsed > 50) {
+      await logMessage(req, `User ID ${userId} exceeded storage limit.`);
+      return res.status(400).json({ error: "User storage limit exceeded." });
+    }
+
+    user.storageUsed += storageUsed;
+    await user.save();
+
+    await logMessage(req, `Updated storage for user ID ${userId} successfully.`);
+    res.status(200).json({
+      message: "User storage updated successfully.",
+      user: {
+        id: user._id,
+        username: user.username,
+        storageUsed: user.storageUsed,
+      },
+    });
+  } catch (error) {
+    await logMessage(req, `Error while updating storage for user ID ${userId}: ${error.message}`);
+    throw error;
   }
-
-  user.storageUsed += storageUsed;
-  await user.save();
-
-  res.status(200).json({
-    message: "User storage updated successfully.",
-    user: {
-      id: user._id,
-      username: user.username,
-      storageUsed: user.storageUsed,
-    },
-  });
 });
 
 /**
@@ -161,27 +203,35 @@ const updateAccountStatus = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { accountStatus } = req.body;
 
-  if (!["active", "restricted"].includes(accountStatus)) {
-    return res.status(400).json({ error: "Invalid account status provided." });
+  try {
+    if (!["active", "restricted"].includes(accountStatus)) {
+      await logMessage(req, `Invalid account status '${accountStatus}' provided for user ID ${userId}.`);
+      return res.status(400).json({ error: "Invalid account status provided." });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      await logMessage(req, `User with ID ${userId} not found for status update.`);
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    user.accountStatus = accountStatus;
+    await user.save();
+
+    await logMessage(req, `Updated account status for user ID ${userId} to '${accountStatus}'.`);
+    res.status(200).json({
+      message: "User account status updated successfully.",
+      user: {
+        id: user._id,
+        username: user.username,
+        accountStatus: user.accountStatus,
+      },
+    });
+  } catch (error) {
+    await logMessage(req, `Error while updating account status for user ID ${userId}: ${error.message}`);
+    throw error;
   }
-
-  const user = await User.findById(userId);
-
-  if (!user) {
-    return res.status(404).json({ error: "User not found." });
-  }
-
-  user.accountStatus = accountStatus;
-  await user.save();
-
-  res.status(200).json({
-    message: "User account status updated successfully.",
-    user: {
-      id: user._id,
-      username: user.username,
-      accountStatus: user.accountStatus,
-    },
-  });
 });
 
 /**
@@ -192,23 +242,30 @@ const updateAccountStatus = asyncHandler(async (req, res) => {
 const updateAllAccountStatuses = asyncHandler(async (req, res) => {
   const { accountStatus } = req.body;
 
-  if (!["active", "restricted"].includes(accountStatus)) {
-    return res.status(400).json({ error: "Invalid account status provided." });
+  try {
+    if (!["active", "restricted"].includes(accountStatus)) {
+      await logMessage(req, `Invalid bulk account status '${accountStatus}' provided.`);
+      return res.status(400).json({ error: "Invalid account status provided." });
+    }
+
+    const users = await User.find();
+
+    for (let i = 0; i < users.length; i++) {
+      users[i].accountStatus = accountStatus;
+      await users[i].save();
+    }
+
+    await logMessage(req, `Bulk updated account statuses to '${accountStatus}' for all users.`);
+    res.status(200).json({
+      message: "All user account statuses updated successfully.",
+    });
+  } catch (error) {
+    await logMessage(req, `Error while bulk updating account statuses: ${error.message}`);
+    throw error;
   }
-
-  const users = await User.find();
-
-  for (let i = 0; i < users.length; i++) {
-    users[i].accountStatus = accountStatus;
-    await users[i].save();
-  }
-
-  res.status(200).json({
-    message: "All user account statuses updated successfully.",
-  });
 });
 
-export  {
+export {
   getUsers,
   getUser,
   registerUser,
