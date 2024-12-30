@@ -117,42 +117,7 @@ export default function NavBar({ links }) {
                       }
                     })
                   }
-                  <SheetFooter>
-                    {user ? (
-                      <div className="mt-6">
-                        <p className="text-black" onClick={logout}>
-                          <b>Log Out</b>
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="mt-6 mb-5 text-center">
-                        <div className="py-2">
-                          {links.map((link, index) => {
-                            if (link.button) {
-                              return (
-                                <div className="">
-                                  <Link to={link.path} key={index}>
-                                    <p className="h-9 mb-3">
-                                      {link.btn_name === "Login" ? (
-                                        <p>
-                                          Existing User?{" "}
-                                          <p className="text-black inline">
-                                            <b>Click here to Log In</b>
-                                          </p>
-                                        </p>
-                                      ) : (
-                                        <Button>Create a new account</Button>
-                                      )}
-                                    </p>
-                                  </Link>
-                                </div>
-                              );
-                            }
-                          })}
-                        </div>
-                      </div>
-                    )}
-                  </SheetFooter>
+
                 </div>
               </SheetContent>
             </Sheet>
@@ -249,41 +214,7 @@ export default function NavBar({ links }) {
           <div className="hidden lg:flex gap-2">
             {user ? (
               <div className="flex justify-between items-center cursor-pointer">
-                <Popover>
-                  <PopoverTrigger>
-                    <Button variant="ghost">
-                      <div className="flex items-center">
-                        <p className="pr-2">{user?.FirstName}</p>
-                        <div className="h-8 w-8 flex items-center justify-center rounded-full overflow-hidden">
-                          <img
-                            src={user?.image}
-                            alt="User Avatar"
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
 
-                  <PopoverContent className="w-40 rounded-sm p-4 text-sm">
-                    <Link to="/profile" className="cursor-pointer">
-                      <p>Profile</p>
-                    </Link>
-                    {user?.isSeller ? (
-                      <Link to="/dash" className="cursor-pointer">
-                        <p className="mt-2 mb-4">Seller Dashboard</p>
-                      </Link>
-                    ) : (
-                      <Link to="/seller-register" className="cursor-pointer">
-                        <p>Become a Seller</p>
-                      </Link>
-                    )}
-                    <hr className="border-gray-800 border-1 my-2" />
-                    <p className="cursor-pointer" onClick={logout}>
-                      <b>Log Out</b>
-                    </p>
-                  </PopoverContent>
-                </Popover>
                 <div className="flex items-center">
                   <Badge badgeContent={cart.length} color="primary">
                     <Link to="/shoppingcart" className="ml-4">
